@@ -1,25 +1,18 @@
-import React from 'react';
-import api from '../lib/api';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
-import Container from '@material-ui/core/Container';
-import Box from '@material-ui/core/Box';
-
-const fetchData = async () => {
-  const result = await api.getUsersDiff();
-  console.log(result);
-};
+import React, { useReducer } from "react";
+import api from "../lib/api";
+import Container from "@material-ui/core/Container";
+import DataTable from "./DataTableContainer";
+import useAppState from "../state";
 
 export const App = () => {
+  const [currentState, dispatch] = useAppState();
+  const { getProjectsDiff, getUsersDiff } = api;
+
   return (
     <Container className="app" fixed>
-      <Box data-testid="app-box" m={2}>
-        <Typography>Your app should show up here.</Typography>
-        {/* Just a dummy fetcher to show how the api should be used, this should be removed */}
-        <Button variant="contained" color="primary" onClick={fetchData}>
-          Test data fetch
-        </Button>
-      </Box>
+      <DataTable currentState={currentState.userData} dispatch={dispatch} fetchDataFromApi={api.getUsersDiff} />
+
+      <DataTable currentState={currentState.projectData} dispatch={dispatch} fetchDataFromApi={api.getProjectsDiff} />
     </Container>
   );
 };
